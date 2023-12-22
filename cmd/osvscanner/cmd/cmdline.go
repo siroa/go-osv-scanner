@@ -1,11 +1,24 @@
+/*
+
+go-osv-scanner - CLI client to discover vulnerable modules.
+
+@author: siroa
+
+@repository: https://github.com/edoardottt/depsdev
+
+@license: https://github.com/siroa/go-osv-scanner/blob/main/LICENSE
+
+*/
+
 package cmd
 
 import (
 	"fmt"
 	"log"
 	"os"
-	"scanner/pkg/gomod"
 	"time"
+
+	"github.com/siroa/go-osv-scanner/pkg/gomod"
 
 	"github.com/spf13/cobra"
 )

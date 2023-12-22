@@ -1,4 +1,4 @@
-module scanner
+module github.com/siroa/go-osv-scanner
 
 go 1.21.4
 
