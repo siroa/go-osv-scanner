@@ -18,6 +18,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/siroa/go-osv-scanner/pkg/api"
 	"github.com/siroa/go-osv-scanner/pkg/gomod"
 
 	"github.com/spf13/cobra"
@@ -42,7 +43,7 @@ var line = &cobra.Command{
 		gm := gomod.ParseGoMod(file)
 		fmt.Printf("Your module name: %s\n", gm.Name)
 		for _, v := range gm.Modules {
-			v.SetAdvisoryKeys()
+			v.SetAdvisoryKeys(api.Depsdev{})
 			v.PrintModule()
 			time.Sleep(100 * time.Millisecond)
 		}

@@ -3,6 +3,8 @@ package gomod
 import (
 	"reflect"
 	"testing"
+
+	"github.com/siroa/go-osv-scanner/pkg/api"
 )
 
 func TestNewGoMod(t *testing.T) {
@@ -131,8 +133,17 @@ func TestModule_SetAdvisoryKeys(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
+		want   []string
 	}{
-		// TODO: Add test cases.
+		{
+			name: "set advisoryKeys",
+			fields: fields{
+				Name:        "test01",
+				Version:     "v1.0.0",
+				AdvisoryIDs: []string{},
+			},
+			want: []string{"Key1", "Key2"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -141,9 +152,13 @@ func TestModule_SetAdvisoryKeys(t *testing.T) {
 				Version:     tt.fields.Version,
 				AdvisoryIDs: tt.fields.AdvisoryIDs,
 			}
-			m.SetAdvisoryKeys()
+			m.SetAdvisoryKeys(api.DepsdevRepositoryStub{})
+			if !reflect.DeepEqual(tt.want, m.AdvisoryIDs) {
+				t.Error("AdvisoryID is different")
+			}
 		})
 	}
+
 }
 
 func TestModule_PrintModule(t *testing.T) {

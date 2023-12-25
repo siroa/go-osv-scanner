@@ -19,7 +19,15 @@ import (
 	"github.com/edoardottt/depsdev/pkg/depsdev"
 )
 
-func GetAdvisoryKeys(name, ver string) []depsdev.AdvisoryKeys {
+type DepsdevRepository interface {
+	GetAdvisoryKeys(string, string) []depsdev.AdvisoryKeys
+}
+
+type Depsdev struct {
+}
+
+// Get Avisorykeys from package name and version using depsdev
+func (d Depsdev) GetAdvisoryKeys(name, ver string) []depsdev.AdvisoryKeys {
 	client := depsdev.NewAPI()
 	i, err := client.GetVersion("Go", name, ver)
 	if err != nil {

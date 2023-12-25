@@ -47,9 +47,9 @@ func NewModule(name, ver string) *Module {
 	}
 }
 
-func (m *Module) SetAdvisoryKeys() {
+func (m *Module) SetAdvisoryKeys(depsdev api.DepsdevRepository) {
 	var keys []string
-	adkeys := api.GetAdvisoryKeys(m.Name, m.Version)
+	adkeys := depsdev.GetAdvisoryKeys(m.Name, m.Version)
 	if len(adkeys) == 0 {
 		fmt.Printf("No vulnerabilities were found in %s:%s\n", m.Name, m.Version)
 		return
