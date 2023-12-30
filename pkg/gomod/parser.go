@@ -12,8 +12,10 @@ package gomod
 import (
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/siroa/go-osv-scanner/pkg/api"
+	"github.com/siroa/go-osv-scanner/pkg/format"
 
 	"golang.org/x/mod/modfile"
 )
@@ -58,6 +60,16 @@ func (m *Module) SetAdvisoryKeys(depsdev api.DepsdevRepository) {
 		keys = append(keys, v.ID)
 	}
 	m.AdvisoryIDs = keys
+}
+
+func (m Module) SetAdvisory(depsdev api.DepsdevRepository) {
+	fmt.Printf("Vulnerability Detection!: %s:%s\n", m.Name, m.Version)
+	for _, ad := range m.AdvisoryIDs {
+		a := depsdev.GetAdvisory(ad)
+		score := strconv.FormatFloat(a.Cvss3Score, 'b', 2, 64)
+		o := format.NewOsv(a.AdvisoryKey.ID, a.Title, a.URL, score, a.Cvss3Vector)
+		o.AddOsvs()
+	}
 }
 
 func (m Module) PrintModule() {

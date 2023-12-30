@@ -19,6 +19,7 @@ import (
 	"time"
 
 	"github.com/siroa/go-osv-scanner/pkg/api"
+	"github.com/siroa/go-osv-scanner/pkg/format"
 	"github.com/siroa/go-osv-scanner/pkg/gomod"
 
 	"github.com/spf13/cobra"
@@ -29,6 +30,10 @@ var line = &cobra.Command{
 	Short: "",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
+		verbose, err := cmd.Flags().GetBool("verbose")
+		if err != nil {
+			log.Fatalln(err)
+		}
 		modFile, err := cmd.Flags().GetString("mod")
 		if err != nil {
 			log.Fatalln(err)
@@ -44,7 +49,13 @@ var line = &cobra.Command{
 		fmt.Printf("Your module name: %s\n", gm.Name)
 		for _, v := range gm.Modules {
 			v.SetAdvisoryKeys(api.Depsdev{})
-			v.PrintModule()
+			if verbose && len(v.AdvisoryIDs) != 0 {
+				v.SetAdvisory(api.Depsdev{})
+				osvs := format.GetOsvs()
+				format.PrintTable(osvs)
+			} else {
+				v.PrintModule()
+			}
 			time.Sleep(100 * time.Millisecond)
 		}
 	},
@@ -59,4 +70,5 @@ func Execute() {
 
 func init() {
 	line.Flags().StringP("mod", "m", "", "Specify the path to the go.mod file")
+	line.Flags().BoolP("verbose", "v", false, "Output vulnerability details")
 }

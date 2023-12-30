@@ -13,7 +13,6 @@ go-osv-scanner - CLI client to discover vulnerable modules.
 package api
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/edoardottt/depsdev/pkg/depsdev"
@@ -21,6 +20,7 @@ import (
 
 type DepsdevRepository interface {
 	GetAdvisoryKeys(string, string) []depsdev.AdvisoryKeys
+	GetAdvisory(string) depsdev.Advisory
 }
 
 type Depsdev struct {
@@ -38,11 +38,11 @@ func (d Depsdev) GetAdvisoryKeys(name, ver string) []depsdev.AdvisoryKeys {
 }
 
 // ToDo: Get details on vulnerability information you find
-func GetAdvisory(ad string) {
+func (d Depsdev) GetAdvisory(ad string) depsdev.Advisory {
 	client := depsdev.NewAPI()
 	i, err := client.GetAdvisory(ad)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(i)
+	return i
 }
