@@ -12,7 +12,9 @@ go-osv-scanner - CLI client to discover vulnerable modules.
 
 package main
 
-import "github.com/siroa/go-osv-scanner/cmd/osvscanner/cmd"
+import (
+	"github.com/siroa/go-osv-scanner/cmd/osvscanner/cmd"
+)
 
 func main() {
 	cmd.Execute()
