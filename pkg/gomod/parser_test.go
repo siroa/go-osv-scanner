@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/siroa/go-osv-scanner/pkg/api"
+	"golang.org/x/mod/modfile"
+	"golang.org/x/mod/module"
 )
 
 func TestNewGoMod(t *testing.T) {
@@ -200,13 +202,52 @@ func TestModule_PrintModule(t *testing.T) {
 	}
 }
 
+func Test_isReplaceModule(t *testing.T) {
+	type args struct {
+		replace []*modfile.Replace
+		path    string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "Contain replace module",
+			args: args{
+				replace: []*modfile.Replace{{Old: module.Version{Path: "replacemod"}}},
+				path:    "replacemod",
+			},
+			want: true,
+		},
+		{
+			name: "Doesn't contain replace module",
+			args: args{
+				replace: []*modfile.Replace{{Old: module.Version{Path: "replacemod"}}},
+				path:    "module",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isReplaceModule(tt.args.replace, tt.args.path); got != tt.want {
+				t.Errorf("isReplaceModule() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestParseGoMod(t *testing.T) {
 	gomod := `
 	module scanner
 
 	go 1.21.4
+
+	replace project1 => ../project1
 	
 	require (
+		project1 v0.0.0
 		github.com/edoardottt/depsdev v0.0.8
 	)
 	

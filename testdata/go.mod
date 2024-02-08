@@ -2,7 +2,10 @@ module test_data
 
 go 1.21.4
 
+replace project1 => ../project1
+
 require (
+    project1 v0.0.0
 	github.com/edoardottt/depsdev v0.0.8
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/mod v0.14.0

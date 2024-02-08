@@ -82,16 +82,29 @@ func (m Module) PrintModule() {
 	}
 }
 
+func isReplaceModule(replace []*modfile.Replace, path string) bool {
+	for _, mod := range replace {
+		if mod.Old.Path == path {
+			return true
+		}
+	}
+	return false
+}
+
 func ParseGoMod(file []byte) *GoMod {
 	f, err := modfile.Parse("go.mod", file, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
+	fmt.Println(f.Replace)
+
 	gm := NewGoMod(f.Module.Mod.Path)
 	var ms []Module
 	for _, v := range f.Require {
-		ms = append(ms, *NewModule(v.Mod.Path, v.Mod.Version))
+		if !isReplaceModule(f.Replace, v.Mod.Path) {
+			ms = append(ms, *NewModule(v.Mod.Path, v.Mod.Version))
+		}
 	}
 	gm.setModules(ms)
 
