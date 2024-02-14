@@ -1,5 +1,6 @@
 # go-osv-scanner
-Query deps.dev for vulnerability information on dependent modules and output.
+Query deps.dev for vulnerability information on dependent modules and output.  
+[![Go Report Card](https://goreportcard.com/badge/github.com/siroa/go-osv-scanner)](https://goreportcard.com/report/github.com/siroa/go-osv-scanner)
 
 Build
 ----------
