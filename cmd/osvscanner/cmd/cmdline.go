@@ -32,18 +32,18 @@ var line = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		verbose, err := cmd.Flags().GetBool("verbose")
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatalln("verbose flag error: ", err)
 		}
 		modFile, err := cmd.Flags().GetString("mod")
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatalln("go.mod flag error: ", err)
 		}
 		if modFile == "" {
 			log.Fatalln("Please specify go.mod file")
 		}
 		file, err := os.ReadFile(modFile)
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatalln("ReadFile error: ", err)
 		}
 		gm := gomod.ParseGoMod(file)
 		fmt.Printf("Your module name: %s\n", gm.Name)

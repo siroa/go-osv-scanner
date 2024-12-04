@@ -97,8 +97,6 @@ func ParseGoMod(file []byte) *GoMod {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(f.Replace)
-
 	gm := NewGoMod(f.Module.Mod.Path)
 	var ms []Module
 	for _, v := range f.Require {
