@@ -3,8 +3,6 @@ go-osv-scanner - CLI client to discover vulnerable modules.
 
 @author: siroa
 
-@repository: https://github.com/edoardottt/depsdev
-
 @license: https://github.com/siroa/go-osv-scanner/blob/main/LICENSE
 */
 package format
@@ -13,6 +11,8 @@ import (
 	"os"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/olekukonko/tablewriter/renderer"
+	"github.com/olekukonko/tablewriter/tw"
 )
 
 type Osv struct {
@@ -52,10 +52,19 @@ func GetOsvs() [][]string {
 }
 
 func PrintTable(data [][]string) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"advisoryKey", "title", "url", "cvss3Score", "cvss3Vector"})
-	table.SetAutoMergeCells(true)
-	table.SetRowLine(true)
-	table.AppendBulk(data)
+	table := tablewriter.NewTable(os.Stdout,
+		tablewriter.WithRenderer(renderer.NewBlueprint(tw.Rendition{
+			Settings: tw.Settings{Separators: tw.Separators{BetweenRows: tw.On}},
+		})),
+		tablewriter.WithConfig(tablewriter.Config{
+			Row: tw.CellConfig{
+				Formatting:   tw.CellFormatting{AutoWrap: tw.WrapNormal}, // Wrap long content
+				Alignment:    tw.CellAlignment{Global: tw.AlignLeft},     // Left-align rows
+				ColMaxWidths: tw.CellWidth{Global: 25},
+			},
+		}),
+	)
+	table.Header([]string{"advisoryKey", "title", "url", "cvss3Score", "cvss3Vector"})
+	table.Bulk(data)
 	table.Render()
 }
